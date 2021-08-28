@@ -1,0 +1,3 @@
+TOOL planetviewer "Planet Viewer"
+  INLINE_URL js/app.js
+  ICON mdi-earth
