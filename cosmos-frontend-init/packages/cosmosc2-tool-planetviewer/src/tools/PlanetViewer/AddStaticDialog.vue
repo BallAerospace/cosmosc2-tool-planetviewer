@@ -53,7 +53,7 @@
                     hint="Unique visual name"
                     :rules="[rules.required]"
                     label="Visual Name"
-                    data-test="Visual Name"
+                    data-test="static-visual-name"
                   />
                 </v-row>
                 <v-row dense>
@@ -63,7 +63,7 @@
                     hint="Boulder, CO USA"
                     :rules="[rules.required]"
                     label="Visual Description"
-                    data-test="Visual Description"
+                    data-test="static-visual-description"
                   />
                 </v-row>
                 <v-row dense>
@@ -73,7 +73,7 @@
                       type="number"
                       :rules="[rules.required]"
                       label="latitude"
-                      data-test="latitudeInput"
+                      data-test="latitude-input"
                     />
                   </v-col>
                   <v-col>
@@ -82,7 +82,7 @@
                       type="number"
                       :rules="[rules.required]"
                       label="longitude"
-                      data-test="longitudeInput"
+                      data-test="longitude-input"
                     />
                   </v-col>
                   <v-col>
@@ -91,7 +91,7 @@
                       type="number"
                       :rules="[rules.required]"
                       label="altitude"
-                      data-test="altitudeInput"
+                      data-test="altitude-input"
                     />
                   </v-col>
                 </v-row>
@@ -99,11 +99,22 @@
                   <span class="ma-2 red--text" v-show="error" v-text="error" />
                 </v-row>
                 <v-row>
-                  <v-btn color="success" type="submit" :disabled="!!error">
+                  <v-btn
+                    color="success"
+                    type="submit"
+                    :disabled="!!error"
+                    data-test="add-static-success-btn"
+                  >
                     Ok
                   </v-btn>
                   <v-spacer />
-                  <v-btn color="primary" @click="show = false">Cancel</v-btn>
+                  <v-btn
+                    color="primary"
+                    @click="show = false"
+                    data-test="add-static-cancel-btn"
+                  >
+                  Cancel
+                  </v-btn>
                 </v-row>
               </v-card-text>
             </v-sheet>

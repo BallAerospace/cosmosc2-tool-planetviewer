@@ -37,7 +37,7 @@
             label="Imagery Provider Url"
             :rules="[rules.required]"
             :hint="url"
-            data-test="inputImageryProviderUrl"
+            data-test="input-imagery-provider-url"
           />
         </v-row>
         <v-row class="my-3">
@@ -48,12 +48,16 @@
             color="success"
             :disabled="!!error"
             @click="submit"
-            data-test="create-submit-btn"
+            data-test="imagery-provider-submit-btn"
           >
             Ok
           </v-btn>
           <v-spacer />
-          <v-btn color="primary" @click="clear" data-test="create-cancel-btn">
+          <v-btn
+            color="primary"
+            @click="clear"
+            data-test="imagery-provider-cancel-btn"
+          >
             Cancel
           </v-btn>
         </v-row>

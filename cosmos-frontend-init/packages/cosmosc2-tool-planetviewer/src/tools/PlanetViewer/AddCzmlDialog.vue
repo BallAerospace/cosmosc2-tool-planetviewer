@@ -33,7 +33,7 @@
           </div>
           <v-menu bottom right>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn data-test="changeType" outlined v-bind="attrs" v-on="on">
+              <v-btn data-test="czml-change-type" outlined v-bind="attrs" v-on="on">
                 <span v-text="typeToLabel[type]" />
                 <v-icon right> mdi-menu-down </v-icon>
               </v-btn>
@@ -64,7 +64,12 @@
           </div>
           <div v-show="type !== 'file'">
             <v-row class="mt-3"> Add CZML in the format selected </v-row>
-            <v-textarea v-model="czml" rows="12" :rules="[rules.required]" />
+            <v-textarea
+              v-model="czml"
+              rows="12"
+              :rules="[rules.required]" 
+              data-test="czml-text-input"
+            />
           </div>
           <v-row class="my-3">
             <span class="red--text" v-show="error" v-text="error" />
@@ -74,12 +79,12 @@
               color="success"
               :disabled="!!error"
               @click="submit"
-              data-test="create-submit-btn"
+              data-test="create-czml-submit-btn"
             >
               Ok
             </v-btn>
             <v-spacer />
-            <v-btn color="primary" @click="clear" data-test="create-cancel-btn">
+            <v-btn color="primary" @click="clear" data-test="create-czml-cancel-btn">
               Cancel
             </v-btn>
           </v-row>

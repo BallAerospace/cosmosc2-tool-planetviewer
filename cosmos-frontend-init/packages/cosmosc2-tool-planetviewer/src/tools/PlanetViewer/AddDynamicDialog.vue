@@ -28,7 +28,7 @@
             <v-menu bottom right>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  data-test="changeResolution"
+                  data-test="change-resolution"
                   outlined
                   v-bind="attrs"
                   v-on="on"
@@ -42,7 +42,7 @@
                   v-for="(kvp, index) in resolutionArray"
                   :key="`resolution-list-item-${index}`"
                   @click="resolution = kvp.key"
-                  data-test="typeDynamic"
+                  data-test="type-dynamic"
                 >
                   <v-list-item-title v-text="kvp.value" />
                 </v-list-item>
@@ -59,7 +59,7 @@
                     hint="Unique visual name"
                     :rules="[rules.required]"
                     label="Visual Name"
-                    data-test="Visual Name"
+                    data-test="dynamic-visual-name"
                   />
                 </v-row>
               </v-card-text>

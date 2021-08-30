@@ -35,14 +35,14 @@
                     type="date"
                     label="Start Date"
                     :rules="[rules.required]"
-                    data-test="startDate"
+                    data-test="start-date"
                   />
                   <v-text-field
                     v-model="startTime"
                     type="time"
                     label="Start Time"
                     :rules="[rules.required]"
-                    data-test="startTime"
+                    data-test="start-time"
                   />
                 </v-row>
                 <v-row dense>
@@ -51,14 +51,14 @@
                     type="date"
                     label="Stop Date"
                     :rules="[rules.required]"
-                    data-test="stopDate"
+                    data-test="stop-date"
                   />
                   <v-text-field
                     v-model="stopTime"
                     type="time"
                     label="Stop Time"
                     :rules="[rules.required]"
-                    data-test="stopTime"
+                    data-test="stop-time"
                   />
                 </v-row>
                 <v-row dense>
@@ -80,11 +80,22 @@
                   <span class="ma-2 red--text" v-show="error" v-text="error" />
                 </v-row>
                 <v-row>
-                  <v-btn color="success" type="submit" :disabled="!!error">
+                  <v-btn
+                    color="success"
+                    type="submit"
+                    :disabled="!!error"
+                    data-test="rewatch-success-btn"
+                  >
                     Ok
                   </v-btn>
                   <v-spacer />
-                  <v-btn color="primary" @click="show = false">Cancel</v-btn>
+                  <v-btn
+                    color="primary"
+                    @click="cancelRewatch"
+                    data-test="rewatch-cancel-btn"
+                  >
+                    Cancel
+                  </v-btn>
                 </v-row>
               </v-card-text>
             </v-sheet>
@@ -96,8 +107,7 @@
 </template>
 
 <script>
-import Api from '@cosmosc2/tool-common/src/services/api'
-import { parse, format, getTime } from 'date-fns'
+import { format } from 'date-fns'
 
 export default {
   components: {},
@@ -142,6 +152,14 @@ export default {
     },
   },
   methods: {
+    cancelRewatch: function () {
+      this.show = !this.show
+      this.startDate = format(new Date(), 'yyyy-MM-dd')
+      this.startTime = format(new Date(), 'HH:mm:ss')
+      this.stopDate = format(new Date(), 'yyyy-MM-dd')
+      this.stopTime = format(new Date(), 'HH:mm:ss')
+      this.utcOrLocal = 'loc'
+    },
     submitRewatch: function () {
       const timeObject = {
         start: new Date(this.startDate + 'T' + this.startTime).getTime(),

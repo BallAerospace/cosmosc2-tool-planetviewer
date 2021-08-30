@@ -87,7 +87,6 @@
 </template>
 
 <script>
-import Api from '@cosmosc2/tool-common/src/services/api'
 import { CosmosApi } from '@cosmosc2/tool-common/src/services/cosmos-api'
 import Cable from '@cosmosc2/tool-common/src/services/cable.js'
 import TopBar from '@cosmosc2/tool-common/src/components/TopBar'
@@ -112,7 +111,6 @@ import {
   ColorMaterialProperty,
   CustomDataSource,
   CzmlDataSource,
-  Entity,
   JulianDate,
   PathGraphics,
   PointGraphics,

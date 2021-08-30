@@ -58,8 +58,8 @@
                   <div v-on="on" v-bind="attrs">
                     <v-btn
                       icon
-                      data-test="deleteVisualIcon"
-                      @click="deleteVisual(item)"
+                      data-test="delete-visual-icon"
+                      @click="() => deleteVisual(item)"
                     >
                       <v-icon> mdi-delete </v-icon>
                     </v-btn>
@@ -81,6 +81,9 @@
               <span>Currently no visuals</span>
             </template>
           </v-data-table>
+          <v-row>
+            <span class="ma-2 red--text" v-show="text" v-text="text" />
+          </v-row>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -88,10 +91,9 @@
 </template>
 
 <script>
-import Api from '@cosmosc2/tool-common/src/services/api'
+import { CosmosApi } from '@cosmosc2/tool-common/src/services/cosmos-api'
 
 export default {
-  components: {},
   props: {
     mode: {
       type: String,
@@ -117,7 +119,18 @@ export default {
       search: null,
       singleExpand: false,
       expanded: [],
+      text: null,
     }
+  },
+  created: function () {
+    const api = new CosmosApi()
+    api.list_configs(this.tool)
+      .then((response) => {
+        this.text = response.data
+      })
+      .catch((error) => {
+        this.text = `Failed to connect to Cosmos. ${error}`
+      })
   },
   computed: {
     error: function () {
@@ -134,7 +147,7 @@ export default {
     listData: function () {
       if (!this.visuals) return []
       let visualId = 0
-      return this.visual.map((visualId) => {
+      return this.visual.map((visual) => {
         visualId += 1
         return {
           ...visual,
