@@ -30,7 +30,7 @@
             v-model="search"
             type="text"
             data-test="search"
-            append-icon="mdi-magnify"
+            prepend-icon="mdi-magnify"
             clear-icon="mdi-close-circle-outline"
             clearable
             single-line
@@ -186,8 +186,4 @@ export default {
 </script>
 
 <style scoped>
-.theme--dark .v-card__title,
-.theme--dark .v-card__subtitle {
-  background-color: var(--v-secondary-darken3);
-}
 </style>
