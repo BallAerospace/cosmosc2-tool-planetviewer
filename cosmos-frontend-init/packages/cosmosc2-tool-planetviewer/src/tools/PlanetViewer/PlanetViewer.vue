@@ -90,9 +90,9 @@
 import { CosmosApi } from '@cosmosc2/tool-common/src/services/cosmos-api'
 import Cable from '@cosmosc2/tool-common/src/services/cable.js'
 import TopBar from '@cosmosc2/tool-common/src/components/TopBar'
+import OpenConfigDialog from '@cosmosc2/tool-common/src/components/OpenConfigDialog'
+import SaveConfigDialog from '@cosmosc2/tool-common/src/components/SaveConfigDialog'
 
-import OpenConfigDialog from '@/tools/PlanetViewer/OpenConfigDialog'
-import SaveConfigDialog from '@/tools/PlanetViewer/SaveConfigDialog'
 import AddCzmlDialog from '@/tools/PlanetViewer/AddCzmlDialog'
 import AddDynamicDialog from '@/tools/PlanetViewer/AddDynamicDialog'
 import AddStaticDialog from '@/tools/PlanetViewer/AddStaticDialog'
