@@ -610,7 +610,6 @@ export default {
             text: `Loading configuartion: ${name}`,
             type: 'success',
           })
-          this.openConfig = false
         })
         .catch((error) => {
           if (error) {
@@ -639,7 +638,6 @@ export default {
             text: `Saved configuartion: ${name}`,
             type: 'success',
           })
-          this.saveConfig = false
         })
         .catch((error) => {
           if (error) {
