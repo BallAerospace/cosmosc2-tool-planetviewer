@@ -124,6 +124,74 @@
                   </v-col>
                 </v-row>
                 <v-row>
+                  <v-col>
+                    <v-text-field
+                      v-model="pathResolution"
+                      type="number"
+                      :rules="[rules.required]"
+                      label="Resolution"
+                      data-test="PathResolutionInput"
+                    >
+                      <template v-slot:append-outer>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <div v-on="on" v-bind="attrs">
+                              <v-icon> mdi-information </v-icon>
+                            </div>
+                          </template>
+                          <span>
+                            Maximum number of seconds to step when sampling the position
+                          </span>
+                        </v-tooltip>
+                      </template>
+                    </v-text-field>
+                  </v-col>
+                  <v-col>
+                    <v-text-field
+                      v-model="leadTime"
+                      type="number"
+                      :rules="[rules.required]"
+                      label="Lead Time"
+                      data-test="leadTimeInput"
+                    >
+                      <template v-slot:append-outer>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <div v-on="on" v-bind="attrs">
+                              <v-icon> mdi-information </v-icon>
+                            </div>
+                          </template>
+                          <span>
+                            The number of seconds in front of the object to show
+                          </span>
+                        </v-tooltip>
+                      </template>
+                    </v-text-field>
+                  </v-col>
+                  <v-col>
+                    <v-text-field
+                      v-model="trailTime"
+                      type="number"
+                      :rules="[rules.required]"
+                      label="Trail Time"
+                      data-test="trailTimeInput"
+                    >
+                      <template v-slot:append-outer>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <div v-on="on" v-bind="attrs">
+                              <v-icon> mdi-information </v-icon>
+                            </div>
+                          </template>
+                          <span>
+                            The number of seconds behind the object to show.
+                          </span>
+                        </v-tooltip>
+                      </template>
+                    </v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
                   <span class="ma-2 red--text" v-show="error" v-text="error" />
                 </v-row>
                 <v-row>
@@ -164,7 +232,7 @@ export default {
   data() {
     return {
       rules: {
-        required: (value) => !!value || 'Required',
+        required: (value) => !!`${value}` || 'Required',
       },
       resolution: 'everything',
       resolutionToLabel: {
@@ -187,15 +255,21 @@ export default {
       selectedItemZ: {},
       packet_list_items: [],
       tlm_item_list_items: [],
+      pathResolution: 100,
+      leadTime: 0,
+      trailTime: 900,
     }
   },
   created() {
     this.api = new CosmosApi()
+    try {
+      this.api.get_all_tlm_info()
+    } catch {}
   },
   computed: {
     error: function () {
       if (this.visualName === '') {
-        return 'New visual must have a name and description'
+        return 'New dynamic visual must have a name.'
       }
       // Traditional for loop so we can return if we find a match
       this.visuals.forEach((visual) => {
@@ -235,6 +309,9 @@ export default {
         itemX: this.selectedItemX,
         itemY: this.selectedItemY,
         itemZ: this.selectedItemZ,
+        pathResolution: this.pathResolution,
+        leadTime: this.leadTime,
+        trailTime: this.trailTime,
       }
       this.$emit('create', ret)
       this.visualName = ''
@@ -243,6 +320,9 @@ export default {
       this.selectedItemX = {}
       this.selectedItemY = {}
       this.selectedItemZ = {}
+      this.pathResolution = 100
+      this.leadTime = 0
+      this.trailTime = 900
     },
     updateItems() {
       this.api

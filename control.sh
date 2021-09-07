@@ -20,10 +20,10 @@ case $1 in
   setup)
     ./scripts/linux/frontend_setup.sh
     ;;
-  build )
+  build)
     docker-compose -f compose.yaml build
     ;;
-  * )
+  *)
     usage $0
     ;;
 esac

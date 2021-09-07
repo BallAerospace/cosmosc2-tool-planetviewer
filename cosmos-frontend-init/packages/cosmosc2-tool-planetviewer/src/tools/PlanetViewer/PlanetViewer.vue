@@ -32,6 +32,9 @@
         <v-btn text v-bind="attrs" @click="showAlert = false"> Close </v-btn>
       </template>
     </v-snackbar>
+    <v-overlay :value="loadingOverlay">
+      <v-progress-circular indeterminate size="64" />
+    </v-overlay>
     <top-bar :menus="menus" :title="title" />
     <div id="cesiumContainer" style="max-height: 100%" />
     <imagery-provider-dialog
@@ -234,6 +237,7 @@ export default {
       alertType: 'success',
       showAlert: false,
       cable: new Cable(),
+      loadingOverlay: false,
       imageryProviderDialog: false,
       imageryProviderUrl: 'Assets/Textures/NaturalEarthII',
       subscription: null,
@@ -299,6 +303,13 @@ export default {
     },
     visuals: function () {
       return this.dynamicVisuals.concat(this.staticVisuals)
+    },
+  },
+  watch: {
+    loadingOverlay (val) {
+      val && setTimeout(() => {
+        this.loadingOverlay = false
+      }, 2000)
     },
   },
   methods: {
@@ -420,6 +431,9 @@ export default {
           itemX: this.selectedItemX,
           itemY: this.selectedItemY,
           itemZ: this.selectedItemZ,
+          pathResolution: this.pathResolution,
+          leadTime: this.leadTime,
+          trailTime: this.trailTime,
         }
       */
       try {
@@ -441,11 +455,11 @@ export default {
           pixelSize: 7,
         }),
         path: new PathGraphics({
-          resolution: 1200,
+          resolution: event.pathResolution,
           material: new ColorMaterialProperty(Color.RED),
           width: 2,
-          leadTime: 0,
-          trailTime: 60 * 15,
+          leadTime: event.leadTime,
+          trailTime: event.trailTime,
         }),
         name: event.name,
         description: JSON.stringify(event, null, 4),
@@ -474,6 +488,7 @@ export default {
       })
       this.dynamicVisuals.push(visual)
       this.addDynamicDialog = false
+      this.loadingOverlay = true
       // console.log(visual)
     },
     createStaticHandler: function (event) {

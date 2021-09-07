@@ -141,7 +141,7 @@ export default {
   data() {
     return {
       rules: {
-        required: (value) => !!value || 'Required',
+        required: (value) => !!`${value}` || 'Required',
       },
       api: null,
       radiansOrDegrees: 'degrees',

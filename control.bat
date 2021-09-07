@@ -26,7 +26,6 @@ GOTO :EOF
   @echo off
 GOTO :EOF
 
-
 :usage
   @echo Usage: %0 [setup, build] 1>&2
   @echo *  setup: setup the directory to build the docker container 1>&2
