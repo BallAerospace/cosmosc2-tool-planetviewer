@@ -11,7 +11,9 @@ fi
 # Setup cosmos-frontend build
 # ***************************************************************************
 
-rsync -av --progress ../${cosmosDir}/cosmos-frontend-init tmp/cosmos-frontend-init --exclude node_modules
-rsync -av --progress ../${cosmosDir}/cypress tmp/cypress --exclude node_modules
-rsync -av --progress ./cosmos-frontend-init tmp/cosmos-frontend-init --exclude node_modules
-rsync -av --progress ./cypress tmp/cypress --exclude node_modules
+mkdir -p tmp/cosmos-frontend-init tmp/cypress
+
+rsync -av --quiet ../${cosmosDir}/cosmos-frontend-init tmp/ --exclude node_modules
+rsync -av --quiet ../${cosmosDir}/cypress tmp/ --exclude node_modules
+rsync -av --quiet ./cosmos-frontend-init tmp/ --exclude node_modules
+rsync -av --quiet ./cypress tmp/ --exclude node_modules
