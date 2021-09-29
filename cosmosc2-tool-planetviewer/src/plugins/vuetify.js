@@ -18,7 +18,7 @@
 */
 
 import Vue from 'vue'
-import Vuetify from 'vuetify/lib'
+import Vuetify from 'vuetify'
 import { AstroIconVuetifyValues } from '@cosmosc2/tool-common/src/components/icons/index.js'
 
 Vue.use(Vuetify)
