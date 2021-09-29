@@ -19,38 +19,18 @@
 
 <template>
   <div>
-    <v-dialog persistent v-model="show" width="800" height="600">
+    <v-dialog persistent v-model="show" width="600" height="600">
       <v-container class="c-chooser">
         <v-card class="pa-3">
           <v-toolbar>
             <v-toolbar-title>Add Dynamic Visual</v-toolbar-title>
-            <v-spacer />
-            <v-menu bottom right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  data-test="change-resolution"
-                  outlined
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  <span v-text="resolutionToLabel[resolution]" />
-                  <v-icon right> mdi-menu-down </v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="(kvp, index) in resolutionArray"
-                  :key="`resolution-list-item-${index}`"
-                  @click="resolution = kvp.key"
-                  data-test="type-dynamic"
-                >
-                  <v-list-item-title v-text="kvp.value" />
-                </v-list-item>
-              </v-list>
-            </v-menu>
           </v-toolbar>
-          <v-form ref="form" @submit.prevent="createVisual">
-            <v-sheet>
+          <v-stepper v-model="dialogStep" vertical non-linear>
+
+            <v-stepper-step editable step="1">
+              Select Source
+            </v-stepper-step>
+            <v-stepper-content step="1">
               <v-card-text>
                 <v-row dense>
                   <v-text-field
@@ -70,9 +50,9 @@
                 <v-row dense>
                   <v-col>
                     <v-select
+                      dense
                       label="Select X Item"
                       hide-details
-                      dense
                       @change="(event) => itemNameChanged(event, 'X')"
                       :items="itemNames"
                       item-text="label"
@@ -88,9 +68,9 @@
                   </v-col>
                   <v-col>
                     <v-select
+                      dense
                       label="Select Y Item"
                       hide-details
-                      dense
                       @change="(event) => itemNameChanged(event, 'Y')"
                       :items="itemNames"
                       item-text="label"
@@ -106,9 +86,9 @@
                   </v-col>
                   <v-col>
                     <v-select
+                      dense
                       label="Select Z"
                       hide-details
-                      dense
                       @change="(event) => itemNameChanged(event, 'Z')"
                       :items="itemNames"
                       item-text="label"
@@ -122,6 +102,35 @@
                       />
                     </v-row>
                   </v-col>
+                </v-row>
+                <v-row>
+                  <v-btn color="success" @click="dialogStep = 2">
+                    Continue
+                  </v-btn>
+                  <v-spacer />
+                  <v-btn color="primary" @click="cancelVisual">
+                    Cancel
+                  </v-btn>
+                </v-row>
+              </v-card-text>
+            </v-stepper-content>
+
+            <v-stepper-step editable step="2">
+              Advanced Options
+            </v-stepper-step>
+            <v-stepper-content step="2">
+              <v-card-text>
+                <v-row align="center" justify="center">
+                  <v-color-picker
+                    v-model="color"
+                    hide-canvas
+                    hide-mode-switch
+                    show-swatches
+                    :swatches="swatches"
+                    mode="rgb"
+                    width="450"
+                    swatches-max-height="100"
+                  />
                 </v-row>
                 <v-row>
                   <v-col>
@@ -192,18 +201,43 @@
                   </v-col>
                 </v-row>
                 <v-row>
+                  <v-btn color="success" @click="dialogStep = 3">
+                    Continue
+                  </v-btn>
+                  <v-spacer />
+                  <v-btn color="primary" @click="cancelVisual">
+                    Cancel
+                  </v-btn>
+                </v-row>
+              </v-card-text>
+            </v-stepper-content>
+
+            <v-stepper-step editable step="3">
+              Review
+            </v-stepper-step>
+            <v-stepper-content step="3">
+              <v-card-text>
+                <v-row>
+                  <v-textarea
+                    readonly
+                    rows="8"
+                    :value="JSON.stringify(event, null, '\t')"
+                  />
+                </v-row>
+                <v-row>
                   <span class="ma-2 red--text" v-show="error" v-text="error" />
                 </v-row>
                 <v-row>
-                  <v-btn color="success" type="submit" :disabled="!!error">
+                  <v-btn color="success" @class="createVisual" :disabled="!!error">
                     Ok
                   </v-btn>
                   <v-spacer />
-                  <v-btn color="primary" @click="show = false">Cancel</v-btn>
+                  <v-btn color="primary" @click="cancelVisual">Cancel</v-btn>
                 </v-row>
               </v-card-text>
-            </v-sheet>
-          </v-form>
+            </v-stepper-content>
+
+          </v-stepper>
         </v-card>
       </v-container>
     </v-dialog>
@@ -234,15 +268,20 @@ export default {
       rules: {
         required: (value) => !!`${value}` || 'Required',
       },
+      dialogStep: 1,
+      color: '#FF0000',
       resolution: 'everything',
       resolutionToLabel: {
         everything: 'Everything',
         oneMinute: '1 Minute',
-        fiveMinute: '5 Minutes',
-        tenMinute: '10 Minutes',
-        fifteenMinute: '15 Minutes',
-        thirtyMinute: '30 Minutes',
       },
+      swatches: [
+        ['#FF0000', '#AA0000', '#550000'],
+        ['#FFFF00', '#AAAA00', '#555500'],
+        ['#00FF00', '#00AA00', '#005500'],
+        ['#00FFFF', '#00AAAA', '#005555'],
+        ['#0000FF', '#0000AA', '#000055'],
+      ],
       api: null,
       visualName: '',
       targetNames: [],
@@ -284,25 +323,11 @@ export default {
       })
       return null
     },
-    resolutionArray: function () {
-      return Object.keys(this.resolutionToLabel).map((key) => {
-        return { key, value: this.resolutionToLabel[key] }
-      })
-    },
-    show: {
-      get() {
-        return this.value
-      },
-      set(value) {
-        this.$emit('input', value) // input is the default event when using v-model
-      },
-    },
-  },
-  methods: {
-    createVisual: function () {
-      const ret = {
+    event: function () {
+      return {
         type: 'dynamic',
         name: this.visualName,
+        color: this.color,
         resolution: this.resolution,
         targetName: this.selectedTargetName,
         packetName: this.selectedPacketName,
@@ -313,7 +338,24 @@ export default {
         leadTime: this.leadTime,
         trailTime: this.trailTime,
       }
-      this.$emit('create', ret)
+    },
+    resolutionArray: function () {
+      return Object.keys(this.resolutionToLabel).map((key) => {
+        return { key, value: this.resolutionToLabel[key] }
+      })
+    },
+   show: {
+      get() {
+        return this.value
+      },
+      set(value) {
+        this.$emit('input', value) // input is the default event when using v-model
+      },
+    },
+  },
+  methods: {
+    createVisual: function () {
+      this.$emit('create', this.event)
       this.visualName = ''
       this.selectedTargetName = null
       this.selectedPacketName = null
@@ -323,6 +365,11 @@ export default {
       this.pathResolution = 100
       this.leadTime = 0
       this.trailTime = 900
+    },
+    cancelVisual: function () {
+      this.show = !this.show
+      this.dialogStep = 1
+      this.color = "#FF0000"
     },
     updateItems() {
       this.api

@@ -19,32 +19,20 @@
 
 <template>
   <div>
-    <v-dialog persistent v-model="show" width="800" height="600">
+    <v-dialog persistent v-model="show" width="600" height="600">
       <v-container class="c-chooser">
         <v-card class="pa-3">
           <v-toolbar>
             <v-toolbar-title>Add Static Visual</v-toolbar-title>
             <v-spacer />
-            <v-radio-group
-              v-model="radiansOrDegrees"
-              row
-              hide-details
-              class="mt-0"
-            >
-              <v-radio
-                label="Degrees"
-                value="degrees"
-                data-test="degrees-radio"
-              />
-              <v-radio
-                label="Radians"
-                value="radians"
-                data-test="radians-radio"
-              />
-            </v-radio-group>
           </v-toolbar>
-          <v-form ref="form" @submit.prevent="createVisual">
-            <v-sheet>
+
+          <v-stepper v-model="dialogStep" vertical non-linear>
+
+            <v-stepper-step editable step="1">
+              Select Source
+            </v-stepper-step>
+            <v-stepper-content step="1">
               <v-card-text>
                 <v-row dense>
                   <v-text-field
@@ -96,6 +84,78 @@
                   </v-col>
                 </v-row>
                 <v-row>
+                  <v-radio-group
+                    v-model="radiansOrDegrees"
+                    row
+                    hide-details
+                    class="mt-0"
+                  >
+                    <v-radio
+                      label="Degrees"
+                      value="degrees"
+                      data-test="degrees-radio"
+                    />
+                    <v-radio
+                      label="Radians"
+                      value="radians"
+                      data-test="radians-radio"
+                    />
+                  </v-radio-group>
+                </v-row>
+                <v-row>
+                  <v-btn color="success" @click="dialogStep = 2">
+                    Continue
+                  </v-btn>
+                  <v-spacer />
+                  <v-btn color="primary" @click="cancelVisual">
+                    Cancel
+                  </v-btn>
+                </v-row>
+              </v-card-text>
+            </v-stepper-content>
+
+            <v-stepper-step editable step="2">
+              Advanced Options
+            </v-stepper-step>
+            <v-stepper-content step="2">
+              <v-card-text>
+                <v-row align="center" justify="center">
+                  <v-color-picker
+                    v-model="color"
+                    hide-canvas
+                    hide-mode-switch
+                    show-swatches
+                    :swatches="swatches"
+                    mode="rgb"
+                    width="450"
+                    swatches-max-height="100"
+                  />
+                </v-row>
+                <v-row>
+                  <v-btn color="success" @click="dialogStep = 3">
+                    Continue
+                  </v-btn>
+                  <v-spacer />
+                  <v-btn color="primary" @click="cancelVisual">
+                    Cancel
+                  </v-btn>
+                </v-row>
+              </v-card-text>
+            </v-stepper-content>
+
+            <v-stepper-step editable step="3">
+              Review
+            </v-stepper-step>
+            <v-stepper-content step="3">
+              <v-card-text>
+                <v-row>
+                  <v-textarea
+                    readonly
+                    rows="8"
+                    :value="JSON.stringify(event, null, '\t')"
+                  />
+                </v-row>
+                <v-row>
                   <span class="ma-2 red--text" v-show="error" v-text="error" />
                 </v-row>
                 <v-row>
@@ -117,8 +177,9 @@
                   </v-btn>
                 </v-row>
               </v-card-text>
-            </v-sheet>
-          </v-form>
+            </v-stepper-content>
+
+          </v-stepper>
         </v-card>
       </v-container>
     </v-dialog>
@@ -143,6 +204,15 @@ export default {
       rules: {
         required: (value) => !!`${value}` || 'Required',
       },
+      dialogStep: 1,
+      color: '#0000FF',
+      swatches: [
+        ['#FF0000', '#AA0000', '#550000'],
+        ['#FFFF00', '#AAAA00', '#555500'],
+        ['#00FF00', '#00AA00', '#005500'],
+        ['#00FFFF', '#00AAAA', '#005555'],
+        ['#0000FF', '#0000AA', '#000055'],
+      ],
       api: null,
       radiansOrDegrees: 'degrees',
       visualName: '',
@@ -153,6 +223,18 @@ export default {
     }
   },
   computed: {
+    event: function () {
+      return {
+        type: 'static',
+        name: this.visualName,
+        color: this.color,
+        description: this.visualDescription,
+        degrees: this.radiansOrDegrees === 'degrees',
+        latitude: parseFloat(this.latitude),
+        longitude: parseFloat(this.longitude),
+        altitude: parseFloat(this.altitude),
+      }
+    },
     error: function () {
       if (this.visualName === '' || this.visualDescription === '') {
         return 'New visual must have a name and description'
@@ -176,16 +258,7 @@ export default {
   },
   methods: {
     createVisual: function () {
-      const ret = {
-        type: 'static',
-        name: this.visualName,
-        description: this.visualDescription,
-        degrees: this.radiansOrDegrees === 'degrees',
-        latitude: parseFloat(this.latitude),
-        longitude: parseFloat(this.longitude),
-        altitude: parseFloat(this.altitude),
-      }
-      this.$emit('create', ret)
+      this.$emit('create', this.event)
       this.radiansOrDegrees = 'degrees'
       this.visualName = ''
       this.visualDescription = ''
@@ -193,6 +266,11 @@ export default {
       this.longitude = '-105.270546'
       this.altitude = '0'
     },
+    cancelVisual: function () {
+      this.show = !this.show
+      this.dialogStep = 1
+      this.color = '#0000FF'
+    }
   },
 }
 </script>

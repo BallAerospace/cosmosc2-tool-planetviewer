@@ -19,58 +19,46 @@
 
 <template>
   <div>
-    <v-dialog persistent v-model="show" width="500">
+    <v-dialog persistent v-model="show" width="600">
       <v-card class="pa-3">
         <v-toolbar>
           <v-toolbar-title>Load Czml</v-toolbar-title>
           <v-spacer />
-          <div v-show="type === 'file'">
-            <v-progress-circular
-              class="mx-2"
-              :indeterminate="readingFile"
-              color="primary"
-            />
-          </div>
-          <v-menu bottom right>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn data-test="czml-change-type" outlined v-bind="attrs" v-on="on">
-                <span v-text="typeToLabel[type]" />
-                <v-icon right> mdi-menu-down </v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="type = 'js'" data-test="typeJs">
-                <v-list-item-title v-text="typeToLabel['js']" />
-              </v-list-item>
-              <v-list-item @click="type = 'txt'" data-test="typeTxt">
-                <v-list-item-title v-text="typeToLabel['txt']" />
-              </v-list-item>
-              <v-list-item @click="type = 'file'" data-test="typeFile">
-                <v-list-item-title v-text="typeToLabel['file']" />
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          <v-progress-circular
+            class="mx-2"
+            :indeterminate="readingFile"
+            color="primary"
+          />
         </v-toolbar>
         <v-card-text>
-          <div v-show="type === 'file'">
-            <v-row class="mt-3"> Upload a CZML file. </v-row>
-            <v-row>
+          <v-row class="mt-3"> Load a CZML file. </v-row>
+          <v-row>
+            <v-col cols="3" class="px-2">
+              <v-btn
+                block
+                color="primary"
+                @click="load"
+                :disabled="!file"
+                :loading="loading"
+                data-test="add-czml-load-btn"
+              >
+                Ok
+              </v-btn>
+            </v-col>
+            <v-col cols="9" class="px-2">
               <v-file-input
                 v-model="file"
-                truncate-length="15"
                 accept=".czml"
               />
-            </v-row>
-          </div>
-          <div v-show="type !== 'file'">
-            <v-row class="mt-3"> Add CZML in the format selected </v-row>
-            <v-textarea
-              v-model="czml"
-              rows="12"
-              :rules="[rules.required]" 
-              data-test="czml-text-input"
-            />
-          </div>
+            </v-col>
+          </v-row>
+          <v-row> Edit CZML definition. </v-row>
+          <v-textarea
+            v-model="czml"
+            rows="12"
+            :rules="[rules.required]" 
+            data-test="czml-text-input"
+          />
           <v-row class="my-3">
             <span class="red--text" v-show="error" v-text="error" />
           </v-row>
@@ -107,12 +95,6 @@ export default {
       czml: '',
       file: null,
       readingFile: false,
-      type: 'js',
-      typeToLabel: {
-        js: 'JS',
-        txt: 'TXT',
-        file: 'File',
-      },
     }
   },
   computed: {
@@ -138,23 +120,22 @@ export default {
     clear: function () {
       this.show = !this.show
       this.czml = ''
+      this.file = null
     },
     submit: function () {
-      if (this.type === 'js') {
-        this.$emit('load', eval(this.czml))
-      } else if (this.type === 'txt') {
-        this.$emit('load', JSON.parse(this.czml))
-      } else if (this.type === 'file') {
-        const fileReader = new FileReader()
-        fileReader.readAsText(this.file)
-        this.readingFile = true
-        const that = this
-        fileReader.onload = function () {
-          that.readingFile = false
-          that.$emit('load', JSON.parse(fileReader.result))
-        }
-      }
+      this.$emit('load', JSON.parse(this.czml))
     },
+    load: function () {
+      const fileReader = new FileReader()
+      fileReader.readAsText(this.file)
+      this.readingFile = true
+      const that = this
+      fileReader.onload = function () {
+        that.readingFile = false
+        that.czml = fileReader.result
+        that.file = null
+      }
+    }
   },
 }
 </script>

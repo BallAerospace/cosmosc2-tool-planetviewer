@@ -31,3 +31,9 @@ COPY ./packages/cosmosc2-tool-planetviewer/*.json packages/cosmosc2-tool-planetv
 COPY ./packages/cosmosc2-tool-planetviewer/ packages/cosmosc2-tool-planetviewer
 RUN ["/cosmos/plugins/docker-package-build.sh", "cosmosc2-tool-planetviewer"]
 ```
+
+## init.sh
+
+```
+ruby /cosmos/bin/cosmos load /cosmos/plugins/gems/cosmosc2-tool-planetviewer-5.0.0.*.gem
+```

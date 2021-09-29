@@ -298,6 +298,12 @@ export default {
         },
       }
     },
+    typeHandlerArray: function () {
+      return {
+        dynamic: this.dynamicVisuals,
+        static: this.staticVisuals,
+      }
+    },
     rewatchEnabled: function () {
       return this.mode === 'Rewatch'
     },
@@ -545,10 +551,10 @@ export default {
       })
     },
     updateHandler: function (event) {
-      const visual = this.visuals.filter(
-        (visual) => event.name === visual.name
-      )[0]
-      this.eventHandlerFunctions['delete'][visual.type](visual)
+      const visual = this.typeHandlerArray[visual.visualType].find(
+        (visual) => event.visualName === visual.name
+      )
+      this.eventHandlerFunctions['delete'][visual.visualType](visual)
     },
     deleteVisual: function (visual) {
       this.eventHandlerFunctions['delete'][visual.type](visual)

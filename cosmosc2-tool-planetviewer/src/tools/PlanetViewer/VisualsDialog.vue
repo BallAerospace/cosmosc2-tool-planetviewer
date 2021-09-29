@@ -19,10 +19,10 @@
 
 <template>
   <div>
-    <v-dialog v-model="show" width="800">
+    <v-dialog v-model="show" width="600">
       <v-card class="pa-3">
         <v-toolbar>
-          <v-toolbar-title>{{ mode }} Visuals</v-toolbar-title>
+          <v-toolbar-title>Visuals</v-toolbar-title>
           <v-spacer />
           <v-text-field
             class="pa-2"
@@ -166,7 +166,8 @@ export default {
         })
         .then((dialog) => {
           const updateObject = {
-            name: visual.name,
+            visualName: visual.name,
+            visualType: visual.type,
             type: 'delete',
           }
           this.$emit('update', updateObject)

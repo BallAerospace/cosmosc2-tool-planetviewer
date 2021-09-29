@@ -19,7 +19,13 @@ version: "3.5"
 
 services:
 
-  cosmos-frontend-init:
+  cosmos-planetviewer-init:
     build:
-      context: "tmp/cosmos-frontend-init"
-    image: "ballaerospace/cosmosc2-frontend-init:${COSMOS_TAG}"
+      context: .
+    image: "ballaerospace/cosmosc2-planetviewer-init:${COSMOS_TAG}"
+    restart: on-failure
+
+networks:
+  default:
+    external: true
+    name: cosmos_default
