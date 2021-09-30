@@ -35,7 +35,6 @@ const vueLifecycles = singleSpaVue({
       })
     },
     el: '#cosmos-tool',
-    router,
   },
 })
 

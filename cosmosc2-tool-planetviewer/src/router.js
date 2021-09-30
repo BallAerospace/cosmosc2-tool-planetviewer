@@ -19,7 +19,7 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import PlanetViewer from './tools/PlanetViewer/PlanetViewer'
 Vue.use(Router)
 
 export default new Router({
@@ -29,7 +29,7 @@ export default new Router({
     {
       path: '/',
       name: 'PlanetViewer',
-      component: () => import('./tools/PlanetViewer/PlanetViewer.vue'),
+      component: PlanetViewer,
       meta: { title: 'Planet Viewer', icon: 'mdi-earth' },
     },
   ],
