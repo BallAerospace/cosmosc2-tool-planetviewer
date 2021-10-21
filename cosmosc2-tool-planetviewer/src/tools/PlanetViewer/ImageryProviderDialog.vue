@@ -20,10 +20,12 @@
 <template>
   <v-dialog persistent v-model="show" width="500">
     <v-card class="pa-3">
-      <v-toolbar>
-        <v-toolbar-title> Imagery Provider Url </v-toolbar-title>
+      <v-system-bar>
         <v-spacer />
-      </v-toolbar>
+        <span> Imagery Provider Url </span>
+        <v-spacer />
+      </v-system-bar>
+
       <v-card-text>
         <v-row class="mt-3">
           Warning this is an advanced feature. Update or change the imagery

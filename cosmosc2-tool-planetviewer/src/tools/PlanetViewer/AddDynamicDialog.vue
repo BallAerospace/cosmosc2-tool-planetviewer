@@ -20,226 +20,218 @@
 <template>
   <div>
     <v-dialog persistent v-model="show" width="600" height="600">
-      <v-container class="c-chooser">
-        <v-card class="pa-3">
-          <v-toolbar>
-            <v-toolbar-title>Add Dynamic Visual</v-toolbar-title>
-          </v-toolbar>
-          <v-stepper v-model="dialogStep" vertical non-linear>
+      <v-card class="pa-3">
+        <v-system-bar>
+          <v-spacer />
+          <span> Add Dynamic Visual </span>
+          <v-spacer />
+        </v-system-bar>
 
-            <v-stepper-step editable step="1">
-              Select Source
-            </v-stepper-step>
-            <v-stepper-content step="1">
-              <v-card-text>
-                <v-row dense>
+        <v-stepper v-model="dialogStep" vertical non-linear>
+          <v-stepper-step editable step="1"> Select Source </v-stepper-step>
+          <v-stepper-content step="1">
+            <v-card-text>
+              <v-row dense>
+                <v-text-field
+                  v-model="visualName"
+                  type="text"
+                  hint="Unique visual name"
+                  :rules="[rules.required]"
+                  label="Visual Name"
+                  data-test="dynamic-visual-name"
+                />
+              </v-row>
+            </v-card-text>
+            <target-packet-item-chooser @on-set="targetPacketChanged($event)" />
+            <v-card-text>
+              <v-row dense>
+                <v-col>
+                  <v-select
+                    dense
+                    label="Select X Item"
+                    hide-details
+                    @change="(event) => itemNameChanged(event, 'X')"
+                    :items="itemNames"
+                    item-text="label"
+                    item-value="value"
+                    v-model="selectedItemX.name"
+                    data-test="select-x-item"
+                  />
+                  <v-row no-gutters>
+                    <v-col
+                      v-text="`Description: ${selectedItemX.description}`"
+                    />
+                  </v-row>
+                </v-col>
+                <v-col>
+                  <v-select
+                    dense
+                    label="Select Y Item"
+                    hide-details
+                    @change="(event) => itemNameChanged(event, 'Y')"
+                    :items="itemNames"
+                    item-text="label"
+                    item-value="value"
+                    v-model="selectedItemY.name"
+                    data-test="select-y-item"
+                  />
+                  <v-row no-gutters>
+                    <v-col
+                      v-text="`Description: ${selectedItemY.description}`"
+                    />
+                  </v-row>
+                </v-col>
+                <v-col>
+                  <v-select
+                    dense
+                    label="Select Z"
+                    hide-details
+                    @change="(event) => itemNameChanged(event, 'Z')"
+                    :items="itemNames"
+                    item-text="label"
+                    item-value="value"
+                    v-model="selectedItemZ.name"
+                    data-test="select-z-item"
+                  />
+                  <v-row no-gutters>
+                    <v-col
+                      v-text="`Description: ${selectedItemZ.description}`"
+                    />
+                  </v-row>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-btn color="success" @click="dialogStep = 2">
+                  Continue
+                </v-btn>
+                <v-spacer />
+                <v-btn color="primary" @click="cancelVisual"> Cancel </v-btn>
+              </v-row>
+            </v-card-text>
+          </v-stepper-content>
+
+          <v-stepper-step editable step="2"> Advanced Options </v-stepper-step>
+          <v-stepper-content step="2">
+            <v-card-text>
+              <v-row align="center" justify="center">
+                <v-color-picker
+                  v-model="color"
+                  hide-canvas
+                  hide-mode-switch
+                  show-swatches
+                  :swatches="swatches"
+                  mode="rgb"
+                  width="100%"
+                  swatches-max-height="100"
+                />
+              </v-row>
+              <v-row>
+                <v-col>
                   <v-text-field
-                    v-model="visualName"
-                    type="text"
-                    hint="Unique visual name"
+                    v-model="pathResolution"
+                    type="number"
                     :rules="[rules.required]"
-                    label="Visual Name"
-                    data-test="dynamic-visual-name"
-                  />
-                </v-row>
-              </v-card-text>
-              <target-packet-item-chooser
-                @on-set="targetPacketChanged($event)"
-              />
-              <v-card-text>
-                <v-row dense>
-                  <v-col>
-                    <v-select
-                      dense
-                      label="Select X Item"
-                      hide-details
-                      @change="(event) => itemNameChanged(event, 'X')"
-                      :items="itemNames"
-                      item-text="label"
-                      item-value="value"
-                      v-model="selectedItemX.name"
-                      data-test="select-x-item"
-                    />
-                    <v-row no-gutters>
-                      <v-col
-                        v-text="`Description: ${selectedItemX.description}`"
-                      />
-                    </v-row>
-                  </v-col>
-                  <v-col>
-                    <v-select
-                      dense
-                      label="Select Y Item"
-                      hide-details
-                      @change="(event) => itemNameChanged(event, 'Y')"
-                      :items="itemNames"
-                      item-text="label"
-                      item-value="value"
-                      v-model="selectedItemY.name"
-                      data-test="select-y-item"
-                    />
-                    <v-row no-gutters>
-                      <v-col
-                        v-text="`Description: ${selectedItemY.description}`"
-                      />
-                    </v-row>
-                  </v-col>
-                  <v-col>
-                    <v-select
-                      dense
-                      label="Select Z"
-                      hide-details
-                      @change="(event) => itemNameChanged(event, 'Z')"
-                      :items="itemNames"
-                      item-text="label"
-                      item-value="value"
-                      v-model="selectedItemZ.name"
-                      data-test="select-z-item"
-                    />
-                    <v-row no-gutters>
-                      <v-col
-                        v-text="`Description: ${selectedItemZ.description}`"
-                      />
-                    </v-row>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-btn color="success" @click="dialogStep = 2">
-                    Continue
-                  </v-btn>
-                  <v-spacer />
-                  <v-btn color="primary" @click="cancelVisual">
-                    Cancel
-                  </v-btn>
-                </v-row>
-              </v-card-text>
-            </v-stepper-content>
+                    label="Resolution"
+                    data-test="PathResolutionInput"
+                  >
+                    <template v-slot:append-outer>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                          <div v-on="on" v-bind="attrs">
+                            <v-icon> mdi-information </v-icon>
+                          </div>
+                        </template>
+                        <span>
+                          Maximum number of seconds to step when sampling the
+                          position
+                        </span>
+                      </v-tooltip>
+                    </template>
+                  </v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    v-model="leadTime"
+                    type="number"
+                    :rules="[rules.required]"
+                    label="Lead Time"
+                    data-test="leadTimeInput"
+                  >
+                    <template v-slot:append-outer>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                          <div v-on="on" v-bind="attrs">
+                            <v-icon> mdi-information </v-icon>
+                          </div>
+                        </template>
+                        <span>
+                          The number of seconds in front of the object to show
+                        </span>
+                      </v-tooltip>
+                    </template>
+                  </v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    v-model="trailTime"
+                    type="number"
+                    :rules="[rules.required]"
+                    label="Trail Time"
+                    data-test="trailTimeInput"
+                  >
+                    <template v-slot:append-outer>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                          <div v-on="on" v-bind="attrs">
+                            <v-icon> mdi-information </v-icon>
+                          </div>
+                        </template>
+                        <span>
+                          The number of seconds behind the object to show.
+                        </span>
+                      </v-tooltip>
+                    </template>
+                  </v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-btn color="success" @click="dialogStep = 3">
+                  Continue
+                </v-btn>
+                <v-spacer />
+                <v-btn color="primary" @click="cancelVisual"> Cancel </v-btn>
+              </v-row>
+            </v-card-text>
+          </v-stepper-content>
 
-            <v-stepper-step editable step="2">
-              Advanced Options
-            </v-stepper-step>
-            <v-stepper-content step="2">
-              <v-card-text>
-                <v-row align="center" justify="center">
-                  <v-color-picker
-                    v-model="color"
-                    hide-canvas
-                    hide-mode-switch
-                    show-swatches
-                    :swatches="swatches"
-                    mode="rgb"
-                    width="450"
-                    swatches-max-height="100"
-                  />
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-text-field
-                      v-model="pathResolution"
-                      type="number"
-                      :rules="[rules.required]"
-                      label="Resolution"
-                      data-test="PathResolutionInput"
-                    >
-                      <template v-slot:append-outer>
-                        <v-tooltip top>
-                          <template v-slot:activator="{ on, attrs }">
-                            <div v-on="on" v-bind="attrs">
-                              <v-icon> mdi-information </v-icon>
-                            </div>
-                          </template>
-                          <span>
-                            Maximum number of seconds to step when sampling the position
-                          </span>
-                        </v-tooltip>
-                      </template>
-                    </v-text-field>
-                  </v-col>
-                  <v-col>
-                    <v-text-field
-                      v-model="leadTime"
-                      type="number"
-                      :rules="[rules.required]"
-                      label="Lead Time"
-                      data-test="leadTimeInput"
-                    >
-                      <template v-slot:append-outer>
-                        <v-tooltip top>
-                          <template v-slot:activator="{ on, attrs }">
-                            <div v-on="on" v-bind="attrs">
-                              <v-icon> mdi-information </v-icon>
-                            </div>
-                          </template>
-                          <span>
-                            The number of seconds in front of the object to show
-                          </span>
-                        </v-tooltip>
-                      </template>
-                    </v-text-field>
-                  </v-col>
-                  <v-col>
-                    <v-text-field
-                      v-model="trailTime"
-                      type="number"
-                      :rules="[rules.required]"
-                      label="Trail Time"
-                      data-test="trailTimeInput"
-                    >
-                      <template v-slot:append-outer>
-                        <v-tooltip top>
-                          <template v-slot:activator="{ on, attrs }">
-                            <div v-on="on" v-bind="attrs">
-                              <v-icon> mdi-information </v-icon>
-                            </div>
-                          </template>
-                          <span>
-                            The number of seconds behind the object to show.
-                          </span>
-                        </v-tooltip>
-                      </template>
-                    </v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-btn color="success" @click="dialogStep = 3">
-                    Continue
-                  </v-btn>
-                  <v-spacer />
-                  <v-btn color="primary" @click="cancelVisual">
-                    Cancel
-                  </v-btn>
-                </v-row>
-              </v-card-text>
-            </v-stepper-content>
-
-            <v-stepper-step editable step="3">
-              Review
-            </v-stepper-step>
-            <v-stepper-content step="3">
-              <v-card-text>
-                <v-row>
-                  <v-textarea
-                    readonly
-                    rows="8"
-                    :value="JSON.stringify(event, null, '\t')"
-                  />
-                </v-row>
-                <v-row>
-                  <span class="ma-2 red--text" v-show="error" v-text="error" />
-                </v-row>
-                <v-row>
-                  <v-btn color="success" @class="createVisual" :disabled="!!error">
-                    Ok
-                  </v-btn>
-                  <v-spacer />
-                  <v-btn color="primary" @click="cancelVisual">Cancel</v-btn>
-                </v-row>
-              </v-card-text>
-            </v-stepper-content>
-
-          </v-stepper>
-        </v-card>
-      </v-container>
+          <v-stepper-step editable step="3"> Review </v-stepper-step>
+          <v-stepper-content step="3">
+            <v-card-text>
+              <v-row>
+                <v-textarea
+                  readonly
+                  rows="8"
+                  :value="JSON.stringify(event, null, '\t')"
+                />
+              </v-row>
+              <v-row>
+                <span class="ma-2 red--text" v-show="error" v-text="error" />
+              </v-row>
+              <v-row>
+                <v-btn
+                  color="success"
+                  @class="createVisual"
+                  :disabled="!!error"
+                >
+                  Ok
+                </v-btn>
+                <v-spacer />
+                <v-btn color="primary" @click="cancelVisual">Cancel</v-btn>
+              </v-row>
+            </v-card-text>
+          </v-stepper-content>
+        </v-stepper>
+      </v-card>
     </v-dialog>
   </div>
 </template>
@@ -344,7 +336,7 @@ export default {
         return { key, value: this.resolutionToLabel[key] }
       })
     },
-   show: {
+    show: {
       get() {
         return this.value
       },
@@ -369,7 +361,7 @@ export default {
     cancelVisual: function () {
       this.show = !this.show
       this.dialogStep = 1
-      this.color = "#FF0000"
+      this.color = '#FF0000'
     },
     updateItems() {
       this.api

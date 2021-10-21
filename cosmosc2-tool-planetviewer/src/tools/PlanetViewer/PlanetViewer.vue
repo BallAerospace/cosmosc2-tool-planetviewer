@@ -23,7 +23,6 @@
       v-model="showAlert"
       :top="true"
       :type="alertType"
-      :icon="alertType"
       :timeout="5000"
     >
       <v-icon> mdi-{{ alertType }} </v-icon>
@@ -312,10 +311,11 @@ export default {
     },
   },
   watch: {
-    loadingOverlay (val) {
-      val && setTimeout(() => {
-        this.loadingOverlay = false
-      }, 2000)
+    loadingOverlay(val) {
+      val &&
+        setTimeout(() => {
+          this.loadingOverlay = false
+        }, 2000)
     },
   },
   methods: {
@@ -642,7 +642,7 @@ export default {
         })
     },
     saveConfiguration: function (name) {
-      localStorage['lastconfig__telemetry_grapher'] = name
+      localStorage['lastconfig__planet_viewer'] = name
       const config = {
         mode: this.mode,
         imageryProviderUrl: this.imageryProviderUrl,

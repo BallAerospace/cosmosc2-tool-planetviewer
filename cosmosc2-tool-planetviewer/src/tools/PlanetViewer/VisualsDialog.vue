@@ -18,26 +18,29 @@
 -->
 
 <template>
-  <div>
-    <v-dialog v-model="show" width="600">
-      <v-card class="pa-3">
-        <v-toolbar>
-          <v-toolbar-title>Visuals</v-toolbar-title>
-          <v-spacer />
-          <v-text-field
-            class="pa-2"
-            label="search"
-            v-model="search"
-            type="text"
-            data-test="search"
-            prepend-icon="mdi-magnify"
-            clear-icon="mdi-close-circle-outline"
-            clearable
-            single-line
-            hide-details
-          />
-        </v-toolbar>
-        <v-card-text class="mt-2">
+  <v-dialog v-model="show" width="600">
+    <v-card>
+      <v-system-bar>
+        <v-spacer />
+        <span>Visuals</span>
+        <v-spacer />
+      </v-system-bar>
+
+      <v-card-text>
+        <div class="pa-3">
+          <v-row dense>
+            <v-text-field
+              label="search"
+              v-model="search"
+              type="text"
+              data-test="search"
+              prepend-icon="mdi-magnify"
+              clear-icon="mdi-close-circle-outline"
+              clearable
+              single-line
+              hide-details
+            />
+          </v-row>
           <v-data-table
             single-expand
             show-expand
@@ -84,10 +87,10 @@
           <v-row>
             <span class="ma-2 red--text" v-show="text" v-text="text" />
           </v-row>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-  </div>
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -123,8 +126,8 @@ export default {
     }
   },
   created: function () {
-    const api = new CosmosApi()
-    api.list_configs(this.tool)
+    new CosmosApi()
+      .list_configs(this.tool)
       .then((response) => {
         this.text = response.data
       })
@@ -185,6 +188,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-</style>

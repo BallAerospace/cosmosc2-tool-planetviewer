@@ -46,17 +46,14 @@
               </v-btn>
             </v-col>
             <v-col cols="9" class="px-2">
-              <v-file-input
-                v-model="file"
-                accept=".czml"
-              />
+              <v-file-input v-model="file" accept=".czml" />
             </v-col>
           </v-row>
           <v-row> Edit CZML definition. </v-row>
           <v-textarea
             v-model="czml"
             rows="12"
-            :rules="[rules.required]" 
+            :rules="[rules.required]"
             data-test="czml-text-input"
           />
           <v-row class="my-3">
@@ -72,7 +69,11 @@
               Ok
             </v-btn>
             <v-spacer />
-            <v-btn color="primary" @click="clear" data-test="create-czml-cancel-btn">
+            <v-btn
+              color="primary"
+              @click="clear"
+              data-test="create-czml-cancel-btn"
+            >
               Cancel
             </v-btn>
           </v-row>
@@ -135,7 +136,7 @@ export default {
         that.czml = fileReader.result
         that.file = null
       }
-    }
+    },
   },
 }
 </script>
