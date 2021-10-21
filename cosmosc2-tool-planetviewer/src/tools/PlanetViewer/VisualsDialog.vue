@@ -22,7 +22,7 @@
     <v-card>
       <v-system-bar>
         <v-spacer />
-        <span>Visuals</span>
+        <span> Visuals </span>
         <v-spacer />
       </v-system-bar>
 

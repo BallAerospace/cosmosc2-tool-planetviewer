@@ -19,7 +19,7 @@
 
 <template>
   <v-dialog v-model="show" width="600">
-    <v-card class="pa-3">
+    <v-card>
       <v-form ref="form" @submit.prevent="submitRewatch">
         <v-system-bar>
           <v-spacer />

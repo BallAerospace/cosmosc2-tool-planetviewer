@@ -453,16 +453,17 @@ export default {
       }
     },
     createDynamicVisual: function (event) {
+      const eventColor = Color.fromCssColorString(event.color)
       this.dataSource.entities.add({
         id: event.name,
         position: new SampledPositionProperty(),
         point: new PointGraphics({
-          color: Color.RED,
+          color: eventColor,
           pixelSize: 7,
         }),
         path: new PathGraphics({
           resolution: event.pathResolution,
-          material: new ColorMaterialProperty(Color.RED),
+          material: new ColorMaterialProperty(eventColor),
           width: 2,
           leadTime: event.leadTime,
           trailTime: event.trailTime,
@@ -514,7 +515,7 @@ export default {
         this.config.push(event)
       } catch (e) {
         this.alertHandler({
-          text: `Failed to load visual: ${event.name}.\nError: ${e}`,
+          text: `Failed to load visual: ${event.name}.\n${e}`,
           type: 'error',
         })
       }
@@ -535,7 +536,7 @@ export default {
         id: event.name,
         position: position,
         point: new PointGraphics({
-          color: Color.BLUE,
+          color: Color.fromCssColorString(event.color),
           pixelSize: 7,
         }),
         name: event.name,

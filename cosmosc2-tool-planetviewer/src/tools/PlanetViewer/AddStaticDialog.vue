@@ -19,16 +19,28 @@
 
 <template>
   <div>
-    <v-dialog persistent v-model="show" width="600" height="600">
-      <v-card class="pa-3">
+    <v-dialog persistent v-model="show" width="600">
+      <v-card>
         <v-system-bar>
           <v-spacer />
           <span> Add Static Visual </span>
           <v-spacer />
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <div v-on="on" v-bind="attrs">
+                <v-icon data-test="close-visual-icon" @click="cancelVisual">
+                  mdi-close-box
+                </v-icon>
+              </div>
+            </template>
+            <span> Close </span>
+          </v-tooltip>
         </v-system-bar>
 
         <v-stepper v-model="dialogStep" vertical non-linear>
-          <v-stepper-step editable step="1"> Select Source </v-stepper-step>
+          <v-stepper-step editable step="1">
+            Input Name, Description, and Location
+          </v-stepper-step>
           <v-stepper-content step="1">
             <v-card-text>
               <v-row dense>
@@ -80,7 +92,7 @@
                   />
                 </v-col>
               </v-row>
-              <v-row>
+              <v-row class="mx-2 mb-2">
                 <v-radio-group
                   v-model="radiansOrDegrees"
                   row
@@ -100,16 +112,19 @@
                 </v-radio-group>
               </v-row>
               <v-row>
-                <v-btn color="success" @click="dialogStep = 2">
+                <v-spacer />
+                <v-btn
+                  @click="dialogStep = 2"
+                  color="success"
+                  data-test="add-static-step-two-btn"
+                >
                   Continue
                 </v-btn>
-                <v-spacer />
-                <v-btn color="primary" @click="cancelVisual"> Cancel </v-btn>
               </v-row>
             </v-card-text>
           </v-stepper-content>
 
-          <v-stepper-step editable step="2"> Advanced Options </v-stepper-step>
+          <v-stepper-step editable step="2"> Select Color </v-stepper-step>
           <v-stepper-content step="2">
             <v-card-text>
               <v-row align="center" justify="center">
@@ -125,11 +140,14 @@
                 />
               </v-row>
               <v-row>
-                <v-btn color="success" @click="dialogStep = 3">
+                <v-spacer />
+                <v-btn
+                  @click="dialogStep = 3"
+                  color="success"
+                  data-test="add-static-step-three-btn"
+                >
                   Continue
                 </v-btn>
-                <v-spacer />
-                <v-btn color="primary" @click="cancelVisual"> Cancel </v-btn>
               </v-row>
             </v-card-text>
           </v-stepper-content>
@@ -149,6 +167,7 @@
               </v-row>
               <v-row>
                 <v-btn
+                @click.prevent="createVisual"
                   color="success"
                   type="submit"
                   :disabled="!!error"
@@ -158,8 +177,8 @@
                 </v-btn>
                 <v-spacer />
                 <v-btn
+                  @click="cancelVisual"
                   color="primary"
-                  @click="show = false"
                   data-test="add-static-cancel-btn"
                 >
                   Cancel

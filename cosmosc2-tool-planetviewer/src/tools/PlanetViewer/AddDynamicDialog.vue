@@ -19,12 +19,22 @@
 
 <template>
   <div>
-    <v-dialog persistent v-model="show" width="600" height="600">
-      <v-card class="pa-3">
+    <v-dialog persistent v-model="show" width="600">
+      <v-card>
         <v-system-bar>
           <v-spacer />
           <span> Add Dynamic Visual </span>
           <v-spacer />
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <div v-on="on" v-bind="attrs">
+                <v-icon data-test="close-visual-icon" @click="cancelVisual">
+                  mdi-close-box
+                </v-icon>
+              </div>
+            </template>
+            <span> Close </span>
+          </v-tooltip>
         </v-system-bar>
 
         <v-stepper v-model="dialogStep" vertical non-linear>
@@ -44,68 +54,63 @@
             </v-card-text>
             <target-packet-item-chooser @on-set="targetPacketChanged($event)" />
             <v-card-text>
-              <v-row dense>
-                <v-col>
-                  <v-select
-                    dense
-                    label="Select X Item"
-                    hide-details
-                    @change="(event) => itemNameChanged(event, 'X')"
-                    :items="itemNames"
-                    item-text="label"
-                    item-value="value"
-                    v-model="selectedItemX.name"
-                    data-test="select-x-item"
-                  />
-                  <v-row no-gutters>
-                    <v-col
-                      v-text="`Description: ${selectedItemX.description}`"
-                    />
-                  </v-row>
-                </v-col>
-                <v-col>
-                  <v-select
-                    dense
-                    label="Select Y Item"
-                    hide-details
-                    @change="(event) => itemNameChanged(event, 'Y')"
-                    :items="itemNames"
-                    item-text="label"
-                    item-value="value"
-                    v-model="selectedItemY.name"
-                    data-test="select-y-item"
-                  />
-                  <v-row no-gutters>
-                    <v-col
-                      v-text="`Description: ${selectedItemY.description}`"
-                    />
-                  </v-row>
-                </v-col>
-                <v-col>
-                  <v-select
-                    dense
-                    label="Select Z"
-                    hide-details
-                    @change="(event) => itemNameChanged(event, 'Z')"
-                    :items="itemNames"
-                    item-text="label"
-                    item-value="value"
-                    v-model="selectedItemZ.name"
-                    data-test="select-z-item"
-                  />
-                  <v-row no-gutters>
-                    <v-col
-                      v-text="`Description: ${selectedItemZ.description}`"
-                    />
-                  </v-row>
-                </v-col>
+              <v-row class="my-2">
+                <v-select
+                  dense
+                  label="Select X Item"
+                  hide-details
+                  @change="(event) => itemNameChanged(event, 'X')"
+                  :items="itemNames"
+                  item-text="label"
+                  item-value="value"
+                  v-model="selectedItemX.name"
+                  data-test="select-x-item"
+                />
+              </v-row>
+              <v-row no-gutters>
+                <v-col v-text="`Description: ${selectedItemX.description}`" />
+              </v-row>
+              <v-row class="my-2">
+                <v-select
+                  dense
+                  label="Select Y Item"
+                  hide-details
+                  @change="(event) => itemNameChanged(event, 'Y')"
+                  :items="itemNames"
+                  item-text="label"
+                  item-value="value"
+                  v-model="selectedItemY.name"
+                  data-test="select-y-item"
+                />
+              </v-row>
+              <v-row no-gutters>
+                <v-col v-text="`Description: ${selectedItemY.description}`" />
+              </v-row>
+              <v-row class="my-2">
+                <v-select
+                  dense
+                  label="Select Z"
+                  hide-details
+                  @change="(event) => itemNameChanged(event, 'Z')"
+                  :items="itemNames"
+                  item-text="label"
+                  item-value="value"
+                  v-model="selectedItemZ.name"
+                  data-test="select-z-item"
+                />
+              </v-row>
+              <v-row no-gutters>
+                <v-col v-text="`Description: ${selectedItemZ.description}`" />
               </v-row>
               <v-row>
-                <v-btn color="success" @click="dialogStep = 2">
+                <v-spacer />
+                <v-btn
+                  @click="dialogStep = 2"
+                  data-test="add-dynamic-step-two-btn"
+                  color="success"
+                >
                   Continue
                 </v-btn>
-                <v-spacer />
-                <v-btn color="primary" @click="cancelVisual"> Cancel </v-btn>
               </v-row>
             </v-card-text>
           </v-stepper-content>
@@ -113,6 +118,32 @@
           <v-stepper-step editable step="2"> Advanced Options </v-stepper-step>
           <v-stepper-content step="2">
             <v-card-text>
+              <v-row>
+                <v-menu bottom right>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      block
+                      outlined
+                      data-test="change-resolution"
+                    >
+                      <span v-text="resolutionToLabel[resolution]" />
+                      <v-icon right> mdi-menu-down </v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item
+                      v-for="(kvp, index) in resolutionArray"
+                      :key="`resolution-list-item-${index}`"
+                      @click="resolution = kvp.key"
+                      data-test="type-dynamic"
+                    >
+                      <v-list-item-title v-text="kvp.value" />
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-row>
               <v-row align="center" justify="center">
                 <v-color-picker
                   v-model="color"
@@ -132,7 +163,7 @@
                     type="number"
                     :rules="[rules.required]"
                     label="Resolution"
-                    data-test="PathResolutionInput"
+                    data-test="path-resolution-input"
                   >
                     <template v-slot:append-outer>
                       <v-tooltip top>
@@ -195,11 +226,14 @@
                 </v-col>
               </v-row>
               <v-row>
-                <v-btn color="success" @click="dialogStep = 3">
+                <v-spacer />
+                <v-btn
+                  @click="dialogStep = 3"
+                  color="success"
+                  data-test="add-dynamic-step-three-btn"
+                >
                   Continue
                 </v-btn>
-                <v-spacer />
-                <v-btn color="primary" @click="cancelVisual"> Cancel </v-btn>
               </v-row>
             </v-card-text>
           </v-stepper-content>
@@ -219,14 +253,21 @@
               </v-row>
               <v-row>
                 <v-btn
+                  @click="createVisual"
                   color="success"
-                  @class="createVisual"
+                  data-test="create-dynamic-btn"
                   :disabled="!!error"
                 >
-                  Ok
+                  Create
                 </v-btn>
                 <v-spacer />
-                <v-btn color="primary" @click="cancelVisual">Cancel</v-btn>
+                <v-btn
+                  @click="cancelVisual"
+                  color="primary"
+                  data-test="cancel-dynamic-btn"
+                >
+                  Cancel
+                </v-btn>
               </v-row>
             </v-card-text>
           </v-stepper-content>

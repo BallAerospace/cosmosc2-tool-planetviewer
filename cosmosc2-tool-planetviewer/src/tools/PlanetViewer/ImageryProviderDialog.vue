@@ -19,7 +19,7 @@
 
 <template>
   <v-dialog persistent v-model="show" width="500">
-    <v-card class="pa-3">
+    <v-card>
       <v-system-bar>
         <v-spacer />
         <span> Imagery Provider Url </span>

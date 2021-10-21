@@ -20,63 +20,65 @@
 <template>
   <div>
     <v-dialog persistent v-model="show" width="600">
-      <v-card class="pa-3">
-        <v-toolbar>
-          <v-toolbar-title>Load Czml</v-toolbar-title>
+      <v-card>
+        <v-system-bar>
           <v-spacer />
-          <v-progress-circular
-            class="mx-2"
-            :indeterminate="readingFile"
-            color="primary"
-          />
-        </v-toolbar>
+          <span> Load Czml </span>
+          <v-spacer />
+        </v-system-bar>
+
         <v-card-text>
-          <v-row class="mt-3"> Load a CZML file. </v-row>
-          <v-row>
-            <v-col cols="3" class="px-2">
+          <div class="pa-3">
+            <v-row class="mt-3"> Load a CZML file. </v-row>
+            <v-row>
+              <v-col cols="3" class="px-2">
+                <v-btn
+                  block
+                  color="primary"
+                  @click="load"
+                  :disabled="!file"
+                  :loading="loading"
+                  data-test="add-czml-load-btn"
+                >
+                  Upload
+                  <template v-slot:loader>
+                    <span>Loading...</span>
+                  </template>
+                </v-btn>
+              </v-col>
+              <v-col class="px-2">
+                <v-file-input v-model="file" accept=".czml" />
+              </v-col>
+            </v-row>
+            <v-row> Edit CZML definition. </v-row>
+            <v-textarea
+              v-model="czml"
+              rows="12"
+              :rules="[rules.required]"
+              data-test="czml-text-input"
+            />
+            <v-row class="my-3">
+              <span class="red--text" v-show="error" v-text="error" />
+            </v-row>
+            <v-row>
               <v-btn
-                block
-                color="primary"
-                @click="load"
-                :disabled="!file"
-                :loading="loading"
-                data-test="add-czml-load-btn"
+                color="success"
+                :disabled="!!error"
+                @click="submit"
+                data-test="create-czml-submit-btn"
               >
                 Ok
               </v-btn>
-            </v-col>
-            <v-col cols="9" class="px-2">
-              <v-file-input v-model="file" accept=".czml" />
-            </v-col>
-          </v-row>
-          <v-row> Edit CZML definition. </v-row>
-          <v-textarea
-            v-model="czml"
-            rows="12"
-            :rules="[rules.required]"
-            data-test="czml-text-input"
-          />
-          <v-row class="my-3">
-            <span class="red--text" v-show="error" v-text="error" />
-          </v-row>
-          <v-row>
-            <v-btn
-              color="success"
-              :disabled="!!error"
-              @click="submit"
-              data-test="create-czml-submit-btn"
-            >
-              Ok
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              color="primary"
-              @click="clear"
-              data-test="create-czml-cancel-btn"
-            >
-              Cancel
-            </v-btn>
-          </v-row>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                @click="clear"
+                data-test="create-czml-cancel-btn"
+              >
+                Cancel
+              </v-btn>
+            </v-row>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
