@@ -23,7 +23,6 @@
       v-model="showAlert"
       :top="true"
       :type="alertType"
-      :icon="alertType"
       :timeout="5000"
     >
       <v-icon> mdi-{{ alertType }} </v-icon>
@@ -298,6 +297,12 @@ export default {
         },
       }
     },
+    typeHandlerArray: function () {
+      return {
+        dynamic: this.dynamicVisuals,
+        static: this.staticVisuals,
+      }
+    },
     rewatchEnabled: function () {
       return this.mode === 'Rewatch'
     },
@@ -306,10 +311,11 @@ export default {
     },
   },
   watch: {
-    loadingOverlay (val) {
-      val && setTimeout(() => {
-        this.loadingOverlay = false
-      }, 2000)
+    loadingOverlay(val) {
+      val &&
+        setTimeout(() => {
+          this.loadingOverlay = false
+        }, 2000)
     },
   },
   methods: {
@@ -447,16 +453,17 @@ export default {
       }
     },
     createDynamicVisual: function (event) {
+      const eventColor = Color.fromCssColorString(event.color)
       this.dataSource.entities.add({
         id: event.name,
         position: new SampledPositionProperty(),
         point: new PointGraphics({
-          color: Color.RED,
+          color: eventColor,
           pixelSize: 7,
         }),
         path: new PathGraphics({
           resolution: event.pathResolution,
-          material: new ColorMaterialProperty(Color.RED),
+          material: new ColorMaterialProperty(eventColor),
           width: 2,
           leadTime: event.leadTime,
           trailTime: event.trailTime,
@@ -508,7 +515,7 @@ export default {
         this.config.push(event)
       } catch (e) {
         this.alertHandler({
-          text: `Failed to load visual: ${event.name}.\nError: ${e}`,
+          text: `Failed to load visual: ${event.name}.\n${e}`,
           type: 'error',
         })
       }
@@ -529,7 +536,7 @@ export default {
         id: event.name,
         position: position,
         point: new PointGraphics({
-          color: Color.BLUE,
+          color: Color.fromCssColorString(event.color),
           pixelSize: 7,
         }),
         name: event.name,
@@ -545,10 +552,10 @@ export default {
       })
     },
     updateHandler: function (event) {
-      const visual = this.visuals.filter(
-        (visual) => event.name === visual.name
-      )[0]
-      this.eventHandlerFunctions['delete'][visual.type](visual)
+      const visual = this.typeHandlerArray[visual.visualType].find(
+        (visual) => event.visualName === visual.name
+      )
+      this.eventHandlerFunctions['delete'][visual.visualType](visual)
     },
     deleteVisual: function (visual) {
       this.eventHandlerFunctions['delete'][visual.type](visual)
@@ -636,7 +643,7 @@ export default {
         })
     },
     saveConfiguration: function (name) {
-      localStorage['lastconfig__telemetry_grapher'] = name
+      localStorage['lastconfig__planet_viewer'] = name
       const config = {
         mode: this.mode,
         imageryProviderUrl: this.imageryProviderUrl,

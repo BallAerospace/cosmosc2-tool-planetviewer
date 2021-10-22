@@ -57,5 +57,13 @@ module.exports = {
           rootMode: 'upward',
         }
       })
+    config.externals([
+      'portal-vue',
+      'vue',
+      'vuejs-dialog',
+      'vuetify',
+      'vuex',
+      'vue-router',
+    ])      
   },
 }

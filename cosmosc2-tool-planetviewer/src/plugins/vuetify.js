@@ -18,19 +18,32 @@
 */
 
 import Vue from 'vue'
-import Router from 'vue-router'
+import Vuetify from 'vuetify'
+import { AstroIconVuetifyValues } from '@cosmosc2/tool-common/src/components/icons/index.js'
 
-Vue.use(Router)
+Vue.use(Vuetify)
 
-export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      name: 'PlanetViewer',
-      component: () => import('./tools/PlanetViewer/PlanetViewer.vue'),
-      meta: { title: 'Planet Viewer', icon: 'mdi-earth' },
+export default new Vuetify({
+  theme: {
+    dark: true,
+    options: {
+      customProperties: true,
     },
-  ],
+    themes: {
+      dark: {
+        primary: '#005a8f',
+        secondary: '#4dacff',
+        tertiary: '#283f58',
+      },
+      light: {
+        primary: '#cce6ff',
+        secondary: '#cce6ff',
+      },
+    },
+  },
+  icons: {
+    values: {
+      ...AstroIconVuetifyValues,
+    },
+  },
 })
