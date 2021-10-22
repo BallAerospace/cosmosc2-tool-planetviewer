@@ -167,7 +167,7 @@
               </v-row>
               <v-row>
                 <v-btn
-                @click.prevent="createVisual"
+                  @click.prevent="createVisual"
                   color="success"
                   type="submit"
                   :disabled="!!error"
@@ -271,6 +271,8 @@ export default {
       this.latitude = '40.014984'
       this.longitude = '-105.270546'
       this.altitude = '0'
+      this.dialogStep = 1
+      this.color = '#0000FF'
     },
     cancelVisual: function () {
       this.show = !this.show

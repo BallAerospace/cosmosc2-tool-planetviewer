@@ -398,6 +398,8 @@ export default {
       this.pathResolution = 100
       this.leadTime = 0
       this.trailTime = 900
+      this.dialogStep = 1
+      this.color = '#FF0000'
     },
     cancelVisual: function () {
       this.show = !this.show

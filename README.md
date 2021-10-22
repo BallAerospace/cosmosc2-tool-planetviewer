@@ -13,5 +13,5 @@ This plugin provides the Cosmos v5 with an integrated Cesium viewer. The user ca
 ...
 > yarn build
 ...
-> rake build VERSION=5.0.1
+> rake build VERSION=5.0.X
 ```

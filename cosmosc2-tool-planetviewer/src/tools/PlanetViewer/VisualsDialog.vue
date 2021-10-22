@@ -28,7 +28,7 @@
 
       <v-card-text>
         <div class="pa-3">
-          <v-row dense>
+          <v-row class="mb-2">
             <v-text-field
               label="search"
               v-model="search"
