@@ -70,22 +70,24 @@
             <span class="ma-2 red--text" v-show="error" v-text="error" />
           </v-row>
           <v-row>
+            <v-spacer />
+            <v-btn
+              @click="cancelRewatch"
+              outlined
+              class="mx-2"
+              data-test="rewatch-cancel-btn"
+            >
+              Cancel
+            </v-btn>
             <v-btn
               @click.prevent="submitRewatch"
-              color="success"
+              class="mx-2"
+              color="primary"
               type="submit"
               :disabled="!!error"
               data-test="rewatch-success-btn"
             >
               Ok
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              color="primary"
-              @click="cancelRewatch"
-              data-test="rewatch-cancel-btn"
-            >
-              Cancel
             </v-btn>
           </v-row>
         </v-card-text>

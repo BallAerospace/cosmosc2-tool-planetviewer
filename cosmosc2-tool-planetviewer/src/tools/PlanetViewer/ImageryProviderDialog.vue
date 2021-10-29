@@ -46,21 +46,23 @@
           <span class="red--text" v-show="error" v-text="error" />
         </v-row>
         <v-row>
-          <v-btn
-            color="success"
-            :disabled="!!error"
-            @click="submit"
-            data-test="imagery-provider-submit-btn"
-          >
-            Ok
-          </v-btn>
           <v-spacer />
           <v-btn
-            color="primary"
             @click="clear"
+            outlined
+            class="mx-2"
             data-test="imagery-provider-cancel-btn"
           >
             Cancel
+          </v-btn>
+          <v-btn
+            @click="submit"
+            class="mx-2"
+            color="primary"
+            data-test="imagery-provider-submit-btn"
+            :disabled="!!error"
+          >
+            Ok
           </v-btn>
         </v-row>
       </v-card-text>

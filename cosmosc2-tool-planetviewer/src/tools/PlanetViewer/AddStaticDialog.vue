@@ -166,22 +166,22 @@
                 <span class="ma-2 red--text" v-show="error" v-text="error" />
               </v-row>
               <v-row>
+                <v-spacer />
+                <v-btn
+                  @click="cancelVisual"
+                  outlined
+                  data-test="add-static-cancel-btn"
+                >
+                  Cancel
+                </v-btn>
                 <v-btn
                   @click.prevent="createVisual"
-                  color="success"
+                  color="primary"
                   type="submit"
                   :disabled="!!error"
                   data-test="add-static-success-btn"
                 >
                   Ok
-                </v-btn>
-                <v-spacer />
-                <v-btn
-                  @click="cancelVisual"
-                  color="primary"
-                  data-test="add-static-cancel-btn"
-                >
-                  Cancel
                 </v-btn>
               </v-row>
             </v-card-text>

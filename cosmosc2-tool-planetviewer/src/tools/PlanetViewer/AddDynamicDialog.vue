@@ -252,21 +252,23 @@
                 <span class="ma-2 red--text" v-show="error" v-text="error" />
               </v-row>
               <v-row>
+                <v-spacer />
+                <v-btn
+                  @click="cancelVisual"
+                  outlined
+                  class="mx-2"
+                  data-test="cancel-dynamic-btn"
+                >
+                  Cancel
+                </v-btn>
                 <v-btn
                   @click="createVisual"
-                  color="success"
+                  class="mx-2"
+                  color="primary"
                   data-test="create-dynamic-btn"
                   :disabled="!!error"
                 >
                   Create
-                </v-btn>
-                <v-spacer />
-                <v-btn
-                  @click="cancelVisual"
-                  color="primary"
-                  data-test="cancel-dynamic-btn"
-                >
-                  Cancel
                 </v-btn>
               </v-row>
             </v-card-text>
