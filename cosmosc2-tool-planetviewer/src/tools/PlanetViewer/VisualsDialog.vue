@@ -45,7 +45,6 @@
             single-expand
             show-expand
             item-key="name"
-            class="elevation-1"
             :expanded.sync="expanded"
             :headers="visualHeaders"
             :items="visuals"

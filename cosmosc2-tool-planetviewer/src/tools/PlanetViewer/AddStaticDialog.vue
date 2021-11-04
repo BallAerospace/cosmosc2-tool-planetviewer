@@ -112,11 +112,15 @@
                 </v-radio-group>
               </v-row>
               <v-row>
+                <span class="ma-2 red--text" v-show="error" v-text="error" />
+              </v-row>
+              <v-row>
                 <v-spacer />
                 <v-btn
                   @click="dialogStep = 2"
-                  color="success"
                   data-test="add-static-step-two-btn"
+                  color="primary"
+                  :disabled="!!error"
                 >
                   Continue
                 </v-btn>
@@ -143,10 +147,29 @@
                 <v-spacer />
                 <v-btn
                   @click="dialogStep = 3"
-                  color="success"
+                  class="mx-1"
+                  color="primary"
                   data-test="add-static-step-three-btn"
                 >
-                  Continue
+                  Review
+                </v-btn>
+                <v-btn
+                  @click="cancelVisual"
+                  outlined
+                  class="mx-1"
+                  data-test="add-static-cancel-btn"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  @click.prevent="createVisual"
+                  class="mx-1"
+                  color="primary"
+                  type="submit"
+                  :disabled="!!error"
+                  data-test="add-static-success-btn"
+                >
+                  Ok
                 </v-btn>
               </v-row>
             </v-card-text>
@@ -170,12 +193,14 @@
                 <v-btn
                   @click="cancelVisual"
                   outlined
+                  class="mx-1"
                   data-test="add-static-cancel-btn"
                 >
                   Cancel
                 </v-btn>
                 <v-btn
                   @click.prevent="createVisual"
+                  class="mx-1"
                   color="primary"
                   type="submit"
                   :disabled="!!error"

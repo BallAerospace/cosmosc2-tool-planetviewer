@@ -552,10 +552,10 @@ export default {
       })
     },
     updateHandler: function (event) {
-      const visual = this.typeHandlerArray[visual.visualType].find(
+      const visual = this.typeHandlerArray[event.visualType].find(
         (visual) => event.visualName === visual.name
       )
-      this.eventHandlerFunctions['delete'][visual.visualType](visual)
+      this.eventHandlerFunctions['delete'][event.visualType](visual)
     },
     deleteVisual: function (visual) {
       this.eventHandlerFunctions['delete'][visual.type](visual)

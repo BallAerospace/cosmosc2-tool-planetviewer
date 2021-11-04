@@ -36,7 +36,6 @@
             <span> Close </span>
           </v-tooltip>
         </v-system-bar>
-
         <v-stepper v-model="dialogStep" vertical non-linear>
           <v-stepper-step editable step="1"> Select Source </v-stepper-step>
           <v-stepper-content step="1">
@@ -103,11 +102,15 @@
                 <v-col v-text="`Description: ${selectedItemZ.description}`" />
               </v-row>
               <v-row>
+                <span class="ma-2 red--text" v-show="error" v-text="error" />
+              </v-row>
+              <v-row>
                 <v-spacer />
                 <v-btn
                   @click="dialogStep = 2"
                   data-test="add-dynamic-step-two-btn"
-                  color="success"
+                  color="primary"
+                  :disabled="!!error"
                 >
                   Continue
                 </v-btn>
@@ -229,10 +232,28 @@
                 <v-spacer />
                 <v-btn
                   @click="dialogStep = 3"
-                  color="success"
+                  class="mx-1"
+                  color="primary"
                   data-test="add-dynamic-step-three-btn"
                 >
-                  Continue
+                  Review
+                </v-btn>
+                <v-btn
+                  @click="cancelVisual"
+                  outlined
+                  class="mx-1"
+                  data-test="cancel-dynamic-btn"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  @click="createVisual"
+                  class="mx-1"
+                  color="primary"
+                  data-test="create-dynamic-btn"
+                  :disabled="!!error"
+                >
+                  Create
                 </v-btn>
               </v-row>
             </v-card-text>
@@ -256,14 +277,14 @@
                 <v-btn
                   @click="cancelVisual"
                   outlined
-                  class="mx-2"
+                  class="mx-1"
                   data-test="cancel-dynamic-btn"
                 >
                   Cancel
                 </v-btn>
                 <v-btn
                   @click="createVisual"
-                  class="mx-2"
+                  class="mx-1"
                   color="primary"
                   data-test="create-dynamic-btn"
                   :disabled="!!error"
