@@ -100,6 +100,11 @@
                   class="mt-0"
                 >
                   <v-radio
+                    label="Cartesian"
+                    value="cartesian"
+                    data-test="cartesian-radio"
+                  />
+                  <v-radio
                     label="Degrees"
                     value="degrees"
                     data-test="degrees-radio"
@@ -220,7 +225,7 @@ export default {
         ['#0000FF', '#0000AA', '#000055'],
       ],
       api: null,
-      radiansOrDegrees: 'degrees',
+      cartesianOrRadiansOrDegrees: 'cartesian',
       visualName: '',
       visualDescription: '',
       latitude: '40.014984',
@@ -235,7 +240,7 @@ export default {
         name: this.visualName,
         color: this.color,
         description: this.visualDescription,
-        degrees: this.radiansOrDegrees === 'degrees',
+        cartesianOrRadiansOrDegrees: this.cartesianOrRadiansOrDegrees,
         latitude: parseFloat(this.latitude),
         longitude: parseFloat(this.longitude),
         altitude: parseFloat(this.altitude),
@@ -265,7 +270,7 @@ export default {
   methods: {
     createVisual: function () {
       this.$emit('create', this.event)
-      this.radiansOrDegrees = 'degrees'
+      this.cartesianOrRadiansOrDegrees = 'cartesian'
       this.visualName = ''
       this.visualDescription = ''
       this.latitude = '40.014984'

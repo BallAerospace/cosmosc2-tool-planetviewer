@@ -102,6 +102,30 @@
               <v-row no-gutters>
                 <v-col v-text="`Description: ${selectedItemZ.description}`" />
               </v-row>
+              <v-row class="mx-2 mb-2">
+                <v-radio-group
+                  v-model="radiansOrDegrees"
+                  row
+                  hide-details
+                  class="mt-0"
+                >
+                  <v-radio
+                    label="Cartesian"
+                    value="cartesian"
+                    data-test="cartesian-radio"
+                  />
+                  <v-radio
+                    label="Degrees"
+                    value="degrees"
+                    data-test="degrees-radio"
+                  />
+                  <v-radio
+                    label="Radians"
+                    value="radians"
+                    data-test="radians-radio"
+                  />
+                </v-radio-group>
+              </v-row>
               <v-row>
                 <v-spacer />
                 <v-btn
@@ -322,6 +346,7 @@ export default {
       targetNames: [],
       packetNames: [],
       itemNames: [],
+      cartesianOrRadiansOrDegrees: 'cartesian',
       selectedTargetName: null,
       selectedPacketName: null,
       selectedItemX: {},
@@ -366,6 +391,7 @@ export default {
         resolution: this.resolution,
         targetName: this.selectedTargetName,
         packetName: this.selectedPacketName,
+        cartesianOrRadiansOrDegrees: this.cartesianOrRadiansOrDegrees,
         itemX: this.selectedItemX,
         itemY: this.selectedItemY,
         itemZ: this.selectedItemZ,
@@ -394,6 +420,7 @@ export default {
       this.visualName = ''
       this.selectedTargetName = null
       this.selectedPacketName = null
+      this.cartesianOrRadiansOrDegrees = 'cartesian'
       this.selectedItemX = {}
       this.selectedItemY = {}
       this.selectedItemZ = {}
