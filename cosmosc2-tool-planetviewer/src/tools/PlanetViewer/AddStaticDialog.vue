@@ -94,7 +94,7 @@
               </v-row>
               <v-row class="mx-2 mb-2">
                 <v-radio-group
-                  v-model="radiansOrDegrees"
+                  v-model="cartesianOrRadiansOrDegrees"
                   row
                   hide-details
                   class="mt-0"
