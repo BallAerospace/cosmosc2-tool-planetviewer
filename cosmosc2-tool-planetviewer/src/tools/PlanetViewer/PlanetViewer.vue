@@ -608,7 +608,7 @@ export default {
             .getById(visual.name)
             .position.addSample(
               new JulianDate.fromDate(new Date(event.time / 1_000_000)),
-              this.convertHandlerFuntions[event.cartesianOrRadiansOrDegrees](
+              this.convertHandlerFuntions[visual.cartesianOrRadiansOrDegrees](
                 event[visual.items[0]],
                 event[visual.items[1]],
                 event[visual.items[2]]
