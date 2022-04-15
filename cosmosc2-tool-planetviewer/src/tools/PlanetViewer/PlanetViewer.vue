@@ -35,7 +35,12 @@
       <v-progress-circular indeterminate size="64" />
     </v-overlay>
     <top-bar :menus="menus" :title="title" />
-    <div id="cesiumContainer" style="max-height: 100%" />
+    <div v-if="mode === 'export'">
+      <!--- TODO --->
+    </div>
+    <div v-else>
+      <div id="cesiumContainer" style="max-height: 100%" />
+    </div>
     <imagery-provider-dialog
       v-model="imageryProviderDialog"
       :url="imageryProviderUrl"
@@ -140,7 +145,7 @@ export default {
       toolName: 'planet-viewer',
       openConfig: false,
       saveConfig: false,
-      mode: '',
+      mode: 'cesium',
       menus: [
         {
           label: 'Cesium',
@@ -285,6 +290,13 @@ export default {
     this.cable.disconnect()
   },
   computed: {
+    convertHandlerFuntions: function () {
+      return {
+        cartesian: this.createCartesianHandler,
+        degrees: this.createCartesianFromDegreesHandler,
+        radians: this.createCartesianFromRadiansHandler,
+      }
+    },
     eventHandlerFunctions: function () {
       return {
         create: {
@@ -335,6 +347,15 @@ export default {
     urlHandler: function (event) {
       // console.log(event)
       this.imageryProviderUrl = event
+    },
+    createCartesianHandler: function (x, y, z) {
+      return new Cartesian3(x, y, z)
+    },
+    createCartesianFromDegreesHandler: function (longitude, latitude, height) {
+      return Cartesian3.fromDegrees(longitude, latitude, height)
+    },
+    createCartesianFromRadiansHandler: function (longitude, latitude, height) {
+      return Cartesian3.fromRadians(longitude, latitude, height)
     },
     createHandler: function (event) {
       this.eventHandlerFunctions['create'][event.type](event)
@@ -437,6 +458,7 @@ export default {
           itemX: this.selectedItemX,
           itemY: this.selectedItemY,
           itemZ: this.selectedItemZ,
+          cartesianOrRadiansOrDegrees: 'degrees',
           pathResolution: this.pathResolution,
           leadTime: this.leadTime,
           trailTime: this.trailTime,
@@ -504,7 +526,7 @@ export default {
           type: this.type,
           name: this.visualName,
           description: this.visualDescription,
-          degrees: this.radiansOrDegrees === 'degrees',
+          cartesianOrRadiansOrDegrees: 'degrees',
           longitude: this.longitude,
           latitude: this.latitude,
           height: this.height,
@@ -521,17 +543,9 @@ export default {
       }
     },
     createStaticVisual: function (event) {
-      const position = event.degrees
-        ? Cartesian3.fromDegrees(
-            event.longitude,
-            event.latitude,
-            event.altitude
-          )
-        : Cartesian3.fromRadians(
-            event.longitude,
-            event.latitude,
-            event.altitude
-          )
+      const position = this.convertHandlerFuntions[
+        event.cartesianOrRadiansOrDegrees
+      ](event.longitude, event.latitude, event.altitude)
       this.dataSource.entities.add({
         id: event.name,
         position: position,
@@ -594,7 +608,7 @@ export default {
             .getById(visual.name)
             .position.addSample(
               new JulianDate.fromDate(new Date(event.time / 1_000_000)),
-              new Cartesian3(
+              this.convertHandlerFuntions[visual.cartesianOrRadiansOrDegrees](
                 event[visual.items[0]],
                 event[visual.items[1]],
                 event[visual.items[2]]
